@@ -1,0 +1,13 @@
+<resources>
+
+
+    <attr name="y_indicator_color" format="color"/>
+    <attr name="y_indicator_height" format="dimension"/>
+    <declare-styleable name="YVPRectangleIndicator">
+        <attr name="y_indicator_color"/>
+        <attr name="y_indicator_height"/>
+    </declare-styleable>
+
+
+
+</resources>
