@@ -4,50 +4,25 @@
               android:id="@+id/activity_main"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
+              android:fitsSystemWindows="true"
               android:orientation="vertical">
 
     <cn.onlyloveyd.yviewpagerindicator.YVPRectangleIndicator
-        android:id="@+id/vpti_main_tab"
+        android:id="@+id/yvprect_indicator"
         android:layout_width="match_parent"
         android:layout_height="45dp"
-        android:background="@color/colorAccent"
-        app:y_indicator_color="@color/colorPrimary"
+        android:background="#f7ef04"
+        app:y_indicator_color="#b9ea06"
         app:y_indicator_height="4dp"
-        android:orientation="horizontal">
-
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:text="新闻"
-            android:textColor="#FFFFFF" />
-
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:text="音乐"
-            android:textColor="#FFFFFF" />
-
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:text="游戏"
-            android:textColor="#FFFFFF" />
-
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:text="体育"
-            android:textColor="#FFFFFF" />
-
-    </cn.onlyloveyd.yviewpagerindicator.YVPRectangleIndicator>
+        android:orientation="horizontal"/>
+    <cn.onlyloveyd.yviewpagerindicator.YVPDotIndicator
+        android:id="@+id/yvpdot_indicator"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:background="#f7ef04"
+        app:y_indicator_color="#b9ea06"
+        app:y_indicator_radius="8dp"
+        android:orientation="horizontal"/>
 
     <android.support.v4.view.ViewPager
         android:id="@+id/vp_main_content"

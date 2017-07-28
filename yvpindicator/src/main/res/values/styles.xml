@@ -3,11 +3,17 @@
 
     <attr name="y_indicator_color" format="color"/>
     <attr name="y_indicator_height" format="dimension"/>
+
+    <attr name="y_indicator_radius" format="dimension"/>
+
     <declare-styleable name="YVPRectangleIndicator">
         <attr name="y_indicator_color"/>
         <attr name="y_indicator_height"/>
     </declare-styleable>
 
-
+    <declare-styleable name="YVPDotIndicator">
+        <attr name="y_indicator_color"/>
+        <attr name="y_indicator_radius"/>
+    </declare-styleable>
 
 </resources>

@@ -37,22 +37,21 @@ import cn.onlyloveyd.yvpindicator.R
  * 创建日期: 2017/7/27 10:18
  * 描   述：
  */
-class YVPRectangleIndicator : LinearLayout {
-
-    private var mRectWidth: Float = 0.0F//矩形底边宽
-    private var mRectHeight: Int = 0//矩形高度
+class YVPDotIndicator : LinearLayout {
     private var mStartPos: Float = 0.0F//矩形起始点
     private var mWidthOffset: Int = 0//矩形移动偏移
 
     private var mPaint: Paint? = null
+    private var mPath: Path? = null
 
     private var mIndicatorColor = Color.parseColor("#FFFFFF")
-    private var mIndicatorHeight = 5
+    private var mIndicatorRadius = 2
 
     private var mVp: ViewPager? = null
     private var pageListener = InterPageChangeListener()
 
     private var mTabCount: Int? = 0
+    private var mTabWidth: Float? = 0.0F
     private val defaultlp = LinearLayout.LayoutParams(0, LayoutParams.MATCH_PARENT, 1.0f)
 
     constructor(context: Context, attrs: AttributeSet) : this(context, attrs, 0)
@@ -61,16 +60,19 @@ class YVPRectangleIndicator : LinearLayout {
 
         val dm = resources.displayMetrics
 
-        val a = context.theme.obtainStyledAttributes(attrs, R.styleable.YVPRectangleIndicator, defStyle, 0)
-        mIndicatorHeight = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, mIndicatorHeight + 0.0F, dm).toInt()
+        val a = context.theme.obtainStyledAttributes(attrs, R.styleable.YVPDotIndicator, defStyle, 0)
+        mIndicatorRadius = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, mIndicatorRadius + 0.0F, dm).toInt()
 
-        mIndicatorColor = a.getColor(R.styleable.YVPRectangleIndicator_y_indicator_color, Color.parseColor("#FFFFFF"))
-        mIndicatorHeight = a.getDimensionPixelSize(R.styleable.YVPRectangleIndicator_y_indicator_height, 5)
+        mIndicatorColor = a.getColor(R.styleable.YVPDotIndicator_y_indicator_color, Color.parseColor("#FFFFFF"))
+        mIndicatorRadius = a.getDimensionPixelSize(R.styleable.YVPDotIndicator_y_indicator_radius, 2)
         a.recycle()
 
         initPaint()
     }
 
+    /**
+     * 设置ViewPager
+     */
     fun setViewPager(vp: ViewPager) {
         mVp = vp
         if (vp.adapter == null) {
@@ -90,8 +92,8 @@ class YVPRectangleIndicator : LinearLayout {
 
     fun addTextTab(position: Int, title: String) {
         var tab = TextView(context)
-        tab.text = title;
-        tab.gravity = Gravity.CENTER;
+        tab.text = title
+        tab.gravity = Gravity.CENTER
         tab.setSingleLine()
 
         tab.isFocusable = true
@@ -112,18 +114,19 @@ class YVPRectangleIndicator : LinearLayout {
 
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
         super.onSizeChanged(w, h, oldw, oldh)
-        mRectWidth = (w / childCount).toFloat()
-        mRectHeight = mIndicatorHeight
-        mStartPos = 0.0F
+        mTabWidth = (w / childCount).toFloat()
+        mStartPos = mTabWidth?.let { it/2 } as Float
     }
 
     override fun dispatchDraw(canvas: Canvas?) {
+        canvas?.save()
+        canvas?.translate(0.0F, height.toFloat())
+        canvas?.drawCircle(mStartPos + mWidthOffset, -mIndicatorRadius.toFloat(), mIndicatorRadius.toFloat(), mPaint)
+        canvas?.restore()
         super.dispatchDraw(canvas)
-        canvas?.translate(mStartPos + mWidthOffset, height.toFloat())
-        canvas?.drawRect(0.0F, -mRectHeight.toFloat(), mRectWidth, 0.0F, mPaint)
     }
 
-    inner class InterPageChangeListener : ViewPager.OnPageChangeListener {
+    inner class InterPageChangeListener: ViewPager.OnPageChangeListener {
         override fun onPageScrollStateChanged(state: Int) {
 
         }
@@ -151,6 +154,7 @@ class YVPRectangleIndicator : LinearLayout {
             windowManager.defaultDisplay.getMetrics(displayMetrics)
             return displayMetrics.widthPixels
         }
+
 
 
 }

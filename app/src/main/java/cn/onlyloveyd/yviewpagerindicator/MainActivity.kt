@@ -10,14 +10,18 @@ import java.util.*
 
 class MainActivity : AppCompatActivity() {
     private var mViewPager: ViewPager? = null
-    private var mViewPagerTriangleIndicator: YVPRectangleIndicator? = null
+    private var mYVPRectangleIndicator: YVPRectangleIndicator? = null
+    private var mYUVDotIndicator: YVPDotIndicator? = null
+
     private val mTitles = Arrays.asList("新闻", "音乐", "游戏", "体育")
     private val mFragments = ArrayList<Fragment>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         mViewPager = findViewById(R.id.vp_main_content) as ViewPager
-        mViewPagerTriangleIndicator = findViewById(R.id.vpti_main_tab) as YVPRectangleIndicator
+        mYVPRectangleIndicator = findViewById(R.id.yvprect_indicator) as YVPRectangleIndicator
+        mYUVDotIndicator = findViewById(R.id.yvpdot_indicator) as YVPDotIndicator
+
         //创建Fragment
         for (title in mTitles) {
             val simpleFragmet = SimpleFragment.newInstance(title)
@@ -36,7 +40,8 @@ class MainActivity : AppCompatActivity() {
                 return mTitles[position]
             }
         }        //添加滑动监听
-        mViewPagerTriangleIndicator!!.setViewPager(mViewPager!!)
+        mYVPRectangleIndicator!!.setViewPager(mViewPager!!)
+        mYUVDotIndicator!!.setViewPager(mViewPager!!)
 
     }
 }
