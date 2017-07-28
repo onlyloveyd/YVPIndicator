@@ -13,13 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package cn.onlyloveyd.yviewpagerindicator
+package cn.onlyloveyd.yvpindicator
 
 import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
-import android.graphics.Path
 import android.support.v4.view.ViewPager
 import android.util.AttributeSet
 import android.util.DisplayMetrics
@@ -62,7 +61,7 @@ class YVPRectangleIndicator : LinearLayout {
         val dm = resources.displayMetrics
 
         val a = context.theme.obtainStyledAttributes(attrs, R.styleable.YVPRectangleIndicator, defStyle, 0)
-        mIndicatorHeight = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, mIndicatorHeight + 0.0F, dm).toInt()
+        mIndicatorHeight = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, mIndicatorHeight.toFloat(), dm).toInt()
 
         mIndicatorColor = a.getColor(R.styleable.YVPRectangleIndicator_y_indicator_color, Color.parseColor("#FFFFFF"))
         mIndicatorHeight = a.getDimensionPixelSize(R.styleable.YVPRectangleIndicator_y_indicator_height, 5)

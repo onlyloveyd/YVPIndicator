@@ -16,4 +16,9 @@
         <attr name="y_indicator_radius"/>
     </declare-styleable>
 
+    <declare-styleable name="YVPTriangleIndicator">
+        <attr name="y_indicator_color"/>
+        <attr name="y_indicator_height"/>
+    </declare-styleable>
+
 </resources>

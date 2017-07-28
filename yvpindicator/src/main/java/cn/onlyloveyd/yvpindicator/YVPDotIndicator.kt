@@ -13,13 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package cn.onlyloveyd.yviewpagerindicator
+package cn.onlyloveyd.yvpindicator
 
 import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
-import android.graphics.Path
 import android.support.v4.view.ViewPager
 import android.util.AttributeSet
 import android.util.DisplayMetrics
@@ -28,31 +27,29 @@ import android.view.Gravity
 import android.view.WindowManager
 import android.widget.LinearLayout
 import android.widget.TextView
-import cn.onlyloveyd.yvpindicator.R
 
 
 /**
- * 文 件 名: YVPRectangleIndicator
+ * 文 件 名: YVPDotIndicator
  * 创 建 人: 易冬
  * 创建日期: 2017/7/27 10:18
  * 描   述：
  */
 class YVPDotIndicator : LinearLayout {
-    private var mStartPos: Float = 0.0F//矩形起始点
-    private var mWidthOffset: Int = 0//矩形移动偏移
+    private var mStartPos: Float = 0.0F//indicator开始位置
+    private var mWidthOffset: Int = 0//初始offset
 
     private var mPaint: Paint? = null
-    private var mPath: Path? = null
 
-    private var mIndicatorColor = Color.parseColor("#FFFFFF")
-    private var mIndicatorRadius = 2
+    private var mIndicatorColor = Color.parseColor("#FFFFFF")//indicator颜色
+    private var mIndicatorRadius = 2//圆形indicator半径
 
     private var mVp: ViewPager? = null
     private var pageListener = InterPageChangeListener()
 
     private var mTabCount: Int? = 0
     private var mTabWidth: Float? = 0.0F
-    private val defaultlp = LinearLayout.LayoutParams(0, LayoutParams.MATCH_PARENT, 1.0f)
+    private val defaultLayoutParams = LinearLayout.LayoutParams(0, LayoutParams.MATCH_PARENT, 1.0f)
 
     constructor(context: Context, attrs: AttributeSet) : this(context, attrs, 0)
     constructor(context: Context, attrs: AttributeSet, defStyle: Int) : super(context, attrs, defStyle) {
@@ -61,7 +58,7 @@ class YVPDotIndicator : LinearLayout {
         val dm = resources.displayMetrics
 
         val a = context.theme.obtainStyledAttributes(attrs, R.styleable.YVPDotIndicator, defStyle, 0)
-        mIndicatorRadius = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, mIndicatorRadius + 0.0F, dm).toInt()
+        mIndicatorRadius = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, mIndicatorRadius.toFloat(), dm).toInt()
 
         mIndicatorColor = a.getColor(R.styleable.YVPDotIndicator_y_indicator_color, Color.parseColor("#FFFFFF"))
         mIndicatorRadius = a.getDimensionPixelSize(R.styleable.YVPDotIndicator_y_indicator_radius, 2)
@@ -99,7 +96,7 @@ class YVPDotIndicator : LinearLayout {
         tab.isFocusable = true
         tab.setOnClickListener { mVp?.currentItem = position }
 
-        this.addView(tab, position, defaultlp)
+        this.addView(tab, position, defaultLayoutParams)
     }
 
     /**
@@ -154,7 +151,4 @@ class YVPDotIndicator : LinearLayout {
             windowManager.defaultDisplay.getMetrics(displayMetrics)
             return displayMetrics.widthPixels
         }
-
-
-
 }

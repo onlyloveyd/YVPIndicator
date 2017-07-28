@@ -15,11 +15,156 @@
  */
 package cn.onlyloveyd.yvpindicator
 
+import android.content.Context
+import android.graphics.Canvas
+import android.graphics.Color
+import android.graphics.Paint
+import android.graphics.Path
+import android.support.v4.view.ViewPager
+import android.util.AttributeSet
+import android.util.DisplayMetrics
+import android.util.TypedValue
+import android.view.Gravity
+import android.view.WindowManager
+import android.widget.LinearLayout
+import android.widget.TextView
+
+
 /**
  * 文 件 名: YVPTriangleIndicator
  * 创 建 人: 易冬
- * 创建日期: 2017/7/27 17:20
+ * 创建日期: 2017/7/27 10:18
  * 描   述：
  */
-class YVPTriangleIndicator {
+class YVPTriangleIndicator : LinearLayout {
+
+    private var mTriangleWidth: Float = 0.0F//矩形底边宽
+    private var mTriangleHeight: Int = 0//矩形高度
+    private var mStartPos: Float = 0.0F//矩形起始点
+    private var mWidthOffset: Int = 0//矩形移动偏移
+
+    private var mTabWidth: Float = 0.0F
+
+    private var mPaint: Paint? = null
+    private var mPath: Path? = null
+
+    private var mIndicatorColor = Color.parseColor("#FFFFFF")
+    private var mIndicatorHeight = 5
+
+    private var mVp: ViewPager? = null
+    private var pageListener = InterPageChangeListener()
+
+    private var mTabCount: Int? = 0
+    private val defaultLayoutParams = LinearLayout.LayoutParams(0, LayoutParams.MATCH_PARENT, 1.0f)
+
+    constructor(context: Context, attrs: AttributeSet) : this(context, attrs, 0)
+    constructor(context: Context, attrs: AttributeSet, defStyle: Int) : super(context, attrs, defStyle) {
+        setWillNotDraw(false)
+
+        val dm = resources.displayMetrics
+
+        val a = context.theme.obtainStyledAttributes(attrs, R.styleable.YVPRectangleIndicator, defStyle, 0)
+        mIndicatorHeight = TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, mIndicatorHeight + 0.0F, dm).toInt()
+
+        mIndicatorColor = a.getColor(R.styleable.YVPRectangleIndicator_y_indicator_color, Color.parseColor("#FFFFFF"))
+        mIndicatorHeight = a.getDimensionPixelSize(R.styleable.YVPRectangleIndicator_y_indicator_height, 5)
+        a.recycle()
+
+        initPaint()
+    }
+
+    fun setViewPager(vp: ViewPager) {
+        mVp = vp
+        if (vp.adapter == null) {
+            throw IllegalArgumentException()
+        }
+        notifyDataSetChanged()
+        mVp?.addOnPageChangeListener(pageListener)
+    }
+
+    fun notifyDataSetChanged() {
+        this.removeAllViews()
+        mTabCount = mVp?.adapter?.count
+        for (i in 0..mTabCount?.let { it - 1 } as Int) {
+            addTextTab(i, mVp?.adapter?.getPageTitle(i).toString())
+        }
+    }
+
+    fun addTextTab(position: Int, title: String) {
+        var tab = TextView(context)
+        tab.text = title
+        tab.gravity = Gravity.CENTER
+        tab.setSingleLine()
+
+        tab.isFocusable = true
+        tab.setOnClickListener { mVp?.currentItem = position }
+
+        this.addView(tab, position, defaultLayoutParams)
+    }
+
+    /**
+     * 初始化画笔
+     */
+    private fun initPaint() {
+        mPaint = Paint()
+        mPaint?.color = mIndicatorColor
+        mPaint?.isAntiAlias = true
+        mPaint?.style = Paint.Style.FILL
+    }
+
+    override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
+        super.onSizeChanged(w, h, oldw, oldh)
+        mTabWidth = (w / childCount).toFloat()
+        mTriangleWidth =  mTabWidth / 3
+        mTriangleHeight = mIndicatorHeight
+        mStartPos = w/childCount/2 - mTriangleWidth/2
+
+        initTriangle()
+    }
+
+    fun initTriangle() {
+        mPath = Path()
+        mPath?.moveTo(0.0F, 0.0F)
+        mPath?.lineTo(mTriangleWidth, 0.0F)
+        mPath?.lineTo(mTriangleWidth / 2, (-mTriangleHeight).toFloat())
+        mPath?.close()
+
+    }
+
+    override fun dispatchDraw(canvas: Canvas?) {
+        canvas?.save()
+        canvas?.translate(mStartPos + mWidthOffset, height.toFloat())
+        canvas?.drawPath(mPath, mPaint)
+        canvas?.restore()
+        super.dispatchDraw(canvas)
+    }
+
+    inner class InterPageChangeListener : ViewPager.OnPageChangeListener {
+        override fun onPageScrollStateChanged(state: Int) {
+
+        }
+
+        override fun onPageSelected(position: Int) {
+
+        }
+
+        override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
+            val tabWidth = screenWidth / childCount
+            mWidthOffset = (tabWidth * position + tabWidth * positionOffset).toInt()
+            invalidate()
+        }
+    }
+
+    /**
+     * 获取屏幕宽度
+
+     * @return
+     */
+    private val screenWidth: Int
+        get() {
+            val windowManager = context.getSystemService(Context.WINDOW_SERVICE) as WindowManager
+            val displayMetrics = DisplayMetrics()
+            windowManager.defaultDisplay.getMetrics(displayMetrics)
+            return displayMetrics.widthPixels
+        }
 }
